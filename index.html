@@ -4,15 +4,17 @@
 	<title>Energy Data Prototype</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../Leaflet-0.6.1/dist/leaflet.css" />
-	<link rel="shortcut icon" href="eDip_logo.png" />
+	<link rel="stylesheet" href="../lib/Leaflet-0.6.1/dist/leaflet.css" />
+	<link rel="shortcut icon" href="../img/eDip_logo.png" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
 	<style>
-		#map {
-			width: 800px;
-			height: 500px;
+		body {
+			padding: 0;
+			margin: 0;
 		}
-
+		html, body, #map {
+			height: 100%;
+		}
 		.info {
 			padding: 6px 8px;
 			font: 14px/16px Arial, Helvetica, sans-serif;
@@ -42,7 +44,7 @@
 </head>
 <body>
 	<div id="map"></div>
-	<script src="../Leaflet-0.6.1/dist/leaflet.js"></script>
+	<script src="../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
 	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
 	<script type="text/javascript" src="data/Global_Energy_Data_110m_OS2000.js"></script>
 	<script type="text/javascript" src="data/Global_Energy_Data_110m_OC2000.js"></script>
@@ -84,7 +86,8 @@
 		*/
 		
 		var
-			cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
+			cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>',
+			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 		
 	    var OC2000, OS2000, OR2000, OC2010, OS2010, OR2010;
@@ -231,7 +234,7 @@
 			var layer = e.target;
 
 			layer.setStyle({
-				weight: 2,
+				weight: 1.5,
 				color: '#666',
 				fillOpacity: 0.7
 			});
@@ -260,7 +263,7 @@
 		var map = L.map('map', {
 			center: [15, 10],
 			zoom: 1,
-			minZoom: 2,
+			minZoom: 1,
 			maxZoom: 4,
 			maxBounds: ([
 				[84, 180],
@@ -278,15 +281,15 @@
 		var dataLayers = {
 			"Petroleum Consumption (2000)":OC2000,
 			"Petroleum Consumption (2010)":OC2010,
-			"Petroleum Production (2000)":OS2000,
-			"Petroleum Production (2010)":OS2010,
-			"Petroleum Reserves (2000)":OR2000,
-			"Petroleum Reserves (2010)":OR2010
+			"Total Oil Production (2000)":OS2000,
+			"Total Oil Production (2010)":OS2010,
+			"Crude Oil Reserves (2000)":OR2000,
+			"Crude Oil Reserves (2010)":OR2010
 		};
 
 		//If vector overlays such as roads, rivers, pipelines, etc are needed, add them here (AND add the layer group using using control.layers).
 		var overlays = {
-			"Oil Pipelines (2009)":pipelines
+			"Oil & Gas Pipelines (2009)":pipelines
 			//"Labels":tonerlabels
 		};
 		
