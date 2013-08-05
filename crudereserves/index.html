@@ -101,26 +101,27 @@
 		
 		// get color depending on OC11 value
 		function getColorAll(d) {
-			return d > 9999	?	'#800026' :
-			       d > 4999 ?	'#BD0026' :
-			       d > 999  ?	'#E31A1C' :
-			       d > 499	?	'#FC4E2A' :
-			       d > 249	?	'#FD8D3C' :
-			       d > 124	?	'#FEB24C' :
-			       d > 0	?	'#FED976' :
-								'#ddd';
+			return d > 99	?	'#800026' :
+			       d > 74	?	'#BD0026' :
+			       d > 29	?	'#E31A1C' :
+			       d > 19	?	'#FC4E2A' :
+			       d > 9	?	'#FD8D3C' :
+			       d > 4	?	'#FEB24C' :
+			       d > 2	?	'#FED976' :
+			       d > 0	?	'#FFEDA0' :
+								'#CCCCCC';		//no data
 		}
 		
 		function getColorOR(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
+			return d > 99	?	'#800026' :
+			       d > 74	?	'#BD0026' :
+			       d > 29	?	'#E31A1C' :
+			       d > 19	?	'#FC4E2A' :
+			       d > 9	?	'#FD8D3C' :
+			       d > 4	?	'#FEB24C' :
+			       d > 2	?	'#FED976' :
+			       d > 0	?	'#FFEDA0' :
+								'#CCCCCC';	
 		}
 		
 		function styleOR2000(feature) {
@@ -238,7 +239,7 @@
 		legend.onAdd = function (map) {
 
 			var div = L.DomUtil.create('div', 'info legend'),
-				grades = ['No data', 1, 125, 250, 500, 1000, 5000, 10000],
+				grades = ['No data', 1, 3, 5, 10, 20, 30, 75, 100],
 				labels = [],
 				from, to;
 

@@ -101,25 +101,26 @@
 		
 		// get color depending on OC11 value
 		function getColorAll(d) {
-			return d > 9999	?	'#800026' :
-			       d > 4999 ?	'#BD0026' :
-			       d > 999  ?	'#E31A1C' :
-			       d > 499	?	'#FC4E2A' :
-			       d > 249	?	'#FD8D3C' :
-			       d > 124	?	'#FEB24C' :
-			       d > 0	?	'#FED976' :
-								'#ddd';
+			return d > 999	?	'#800026' :
+			       d > 299	?	'#BD0026' :
+			       d > 199	?	'#E31A1C' :
+			       d > 99	?	'#FC4E2A' :
+			       d > 64	?	'#FD8D3C' :
+			       d > 29	?	'#FEB24C' :
+			       d > 9	?	'#FED976' :
+			       d > 0	?	'#FFEDA0' :
+								'#CCCCCC';
 		}
 		
 		function getColorGR(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
+			return d > 999	?	'#800026' :
+			       d > 299	?	'#BD0026' :
+			       d > 199	?	'#E31A1C' :
+			       d > 99	?	'#FC4E2A' :
+			       d > 64	?	'#FD8D3C' :
+			       d > 29	?	'#FEB24C' :
+			       d > 9	?	'#FED976' :
+			       d > 0	?	'#FFEDA0' :
 								'#CCCCCC';
 		}
 		
@@ -236,9 +237,8 @@
 		var legend = L.control({position: 'bottomleft'});
 
 		legend.onAdd = function (map) {
-
 			var div = L.DomUtil.create('div', 'info legend'),
-				grades = ['No data', 1, 125, 250, 500, 1000, 5000, 10000],
+				grades = ['No data', 1, 10, 30, 65, 100, 200, 300, 1000],
 				labels = [],
 				from, to;
 

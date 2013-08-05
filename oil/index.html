@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Energy Data Prototype</title>
+	<title>Energy Data - Gas Consumption & Production</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="../../lib/Leaflet-0.6.1/dist/leaflet.css" />
@@ -104,38 +104,39 @@
 		
 		// get color depending on OC11 value
 		function getColorAll(d) {
-			return d > 9999	?	'#800026' :
-			       d > 4999 ?	'#BD0026' :
-			       d > 999  ?	'#E31A1C' :
-			       d > 499	?	'#FC4E2A' :
-			       d > 249	?	'#FD8D3C' :
-			       d > 124	?	'#FEB24C' :
-			       d > 0	?	'#FED976' :
-								'#ddd';
+			return d > 4999		?	'#800026' :
+			       d > 3499		?	'#BD0026' :
+				   d > 2499		?	'#E31A1C' :
+			       d > 1999		?	'#FC4E2A' :
+			       d > 999		?	'#FD8D3C' :
+			       d > 499		?	'#FEB24C' :
+			       d > 199		?	'#FED976' :
+			       d > 0		?	'#FFEDA0' :
+									'#CCCCCC' ;
 		}
 		
 		function getColorOC(d) {
-			return d > 20000	? 	'#800026' :
-			       d > 15000	? 	'#BD0026' :
-			       d > 10000	? 	'#E31A1C' :
-			       d > 5000		? 	'#FC4E2A' :
-			       d > 2500		? 	'#FD8D3C' :
-			       d > 1000		? 	'#FEB24C' :
-			       d > 500		? 	'#FED976' :
-			       d > 1		? 	'#FFEDA0' :
-									'#CCCCCC';
+			return d > 4999		?	'#800026' :
+			       d > 3499		?	'#BD0026' :
+				   d > 2499		?	'#E31A1C' :
+			       d > 1999		?	'#FC4E2A' :
+			       d > 999		?	'#FD8D3C' :
+			       d > 499		?	'#FEB24C' :
+			       d > 199		?	'#FED976' :
+			       d > 0		?	'#FFEDA0' :
+									'#CCCCCC' ;
 		}
 		
 		function getColorOS(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
+			return d > 4999		?	'#800026' :
+			       d > 3499		?	'#BD0026' :
+				   d > 2499		?	'#E31A1C' :
+			       d > 1999		?	'#FC4E2A' :
+			       d > 999		?	'#FD8D3C' :
+			       d > 499		?	'#FEB24C' :
+			       d > 199		?	'#FED976' :
+			       d > 0		?	'#FFEDA0' :
+									'#CCCCCC' ;
 		}
 
 		function styleOC2000(feature) {
@@ -277,7 +278,7 @@
 		legend.onAdd = function (map) {
 
 			var div = L.DomUtil.create('div', 'info legend'),
-				grades = ['No data', 1, 125, 250, 500, 1000, 5000, 10000],
+				grades = ['No data', 1, 200, 500, 1000, 2000, 2500, 3500, 5000],
 				labels = [],
 				from, to;
 
