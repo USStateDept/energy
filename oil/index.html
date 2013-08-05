@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Energy Data - Gas Reserves</title>
+	<title>Energy Data Prototype</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="../../lib/Leaflet-0.6.1/dist/leaflet.css" />
 	<link rel="shortcut icon" href="../../img/eDip_logo.png" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
@@ -46,8 +46,10 @@
 	<div id="map"></div>
 	<script src="../../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
 	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
-	<script type="text/javascript" src="../data/Global_Energy_Data_110m_GR2000.js"></script>
-	<script type="text/javascript" src="../data/Global_Energy_Data_110m_GR2010.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OS2000.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OC2000.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OS2010.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OC2010.js"></script>
 	<script type="text/javascript" src="../data/oil_pipelines.js"></script>
 	<script type="text/javascript">
 
@@ -86,11 +88,12 @@
 			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 		
-	    var GR2000, GR2010;
+	    var OC2000, OS2000, OC2010, OS2010;
 		
-		
-		GR2000 = L.geoJson(gr2000Data, {style: styleGR2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GR2010 = L.geoJson(gr2010Data, {style: styleGR2010,onEachFeature: onEachFeature, attribution: cmAttr});
+		OC2000 = L.geoJson(oc2000Data, {style: styleOC2000,onEachFeature: onEachFeature, attribution: cmAttr}),
+		OC2010 = L.geoJson(oc2010Data, {style: styleOC2010,onEachFeature: onEachFeature, attribution: cmAttr}),
+		OS2000 = L.geoJson(os2000Data, {style: styleOS2000,onEachFeature: onEachFeature, attribution: cmAttr}),
+		OS2010 = L.geoJson(os2010Data, {style: styleOS2010,onEachFeature: onEachFeature, attribution: cmAttr}),
 		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
 		
 		var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
@@ -111,7 +114,19 @@
 								'#ddd';
 		}
 		
-		function getColorGR(d) {
+		function getColorOC(d) {
+			return d > 20000	? 	'#800026' :
+			       d > 15000	? 	'#BD0026' :
+			       d > 10000	? 	'#E31A1C' :
+			       d > 5000		? 	'#FC4E2A' :
+			       d > 2500		? 	'#FD8D3C' :
+			       d > 1000		? 	'#FEB24C' :
+			       d > 500		? 	'#FED976' :
+			       d > 1		? 	'#FFEDA0' :
+									'#CCCCCC';
+		}
+		
+		function getColorOS(d) {
 			return d > 2000	?	'#800026' :
 			       d > 1500	?	'#BD0026' :
 			       d > 1000	?	'#E31A1C' :
@@ -122,8 +137,8 @@
 			       d > 1	?	'#FFEDA0' :
 								'#CCCCCC';
 		}
-		
-		function styleGR2000(feature) {
+
+		function styleOC2000(feature) {
 			return {
 				weight: 1,
 				opacity: 1,
@@ -133,7 +148,27 @@
 			};
 		}
 		
-		function styleGR2010(feature) {
+		function styleOS2000(feature) {
+			return {
+				weight: 1,
+				opacity: 1,
+				color: 'white',
+				fillOpacity: 0.7,
+				fillColor: getColorAll(feature.properties.Value)
+			};
+		}
+
+		function styleOC2010(feature) {
+			return {
+				weight: 1,
+				opacity: 1,
+				color: 'white',
+				fillOpacity: 0.7,
+				fillColor: getColorAll(feature.properties.Value)
+			};
+		}
+		
+		function styleOS2010(feature) {
 			return {
 				weight: 1,
 				opacity: 1,
@@ -176,8 +211,10 @@
 		}
 
 		function resetHighlight(e) {
-			GR2000.resetStyle(e.target);
-			GR2010.resetStyle(e.target);
+			OC2000.resetStyle(e.target);
+			OS2000.resetStyle(e.target);
+			OC2010.resetStyle(e.target);
+			OS2010.resetStyle(e.target);
 			info.update();
 		}
 
@@ -194,7 +231,7 @@
 				[84, 180],
 				[-60, -180]
 			]),
-			layers: [minimal, GR2010]
+			layers: [minimal, OC2010]
 		});
 
 		var baseLayers = {
@@ -204,8 +241,10 @@
 		};
 		
 		var dataLayers = {
-			"Gas Reserves (2000)":GR2000,
-			"Gas Reserves (2010)":GR2010,
+			"Petroleum Consumption (2000)":OC2000,
+			"Petroleum Consumption (2010)":OC2010,
+			"Total Oil Production (2000)":OS2000,
+			"Total Oil Production (2010)":OS2010,
 		};
 
 		//If vector overlays such as roads, rivers, pipelines, etc are needed, add them here (AND add the layer group using using control.layers).
