@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Energy Data Prototype</title>
+	<title>Energy Data - Crude Reserves</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<link rel="stylesheet" href="../lib/Leaflet-0.6.1/dist/leaflet.css" />
-	<link rel="shortcut icon" href="../img/eDip_logo.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/Leaflet-0.6.1/dist/leaflet.css" />
+	<link rel="shortcut icon" href="../../img/eDip_logo.png" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
 	<style>
 		body {
@@ -44,21 +44,11 @@
 </head>
 <body>
 	<div id="map"></div>
-	<script src="../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
+	<script src="../../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
 	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OS2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OC2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OR2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GC2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GS2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GR2000.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OS2010.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OC2010.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_OR2010.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GC2010.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GS2010.js"></script>
-	<script type="text/javascript" src="data/Global_Energy_Data_110m_GR2010.js"></script>
-	<script type="text/javascript" src="data/oil_pipelines.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OR2000.js"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_OR2010.js"></script>
+	<script type="text/javascript" src="../data/oil_pipelines.js"></script>
 	<script type="text/javascript">
 
 		/*
@@ -96,20 +86,11 @@
 			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 		
-	    var OC2000, OS2000, OR2000, GC2000, GS2000, GR2000, OC2010, OS2010, OR2010, GC2010, GS2010, GR2010;
+	    var OR2000, OR2010;
 		
-		OC2000 = L.geoJson(oc2000Data, {style: styleOC2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		OC2010 = L.geoJson(oc2010Data, {style: styleOC2010,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GC2000 = L.geoJson(gc2000Data, {style: styleGC2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GC2010 = L.geoJson(gc2010Data, {style: styleGC2010,onEachFeature: onEachFeature, attribution: cmAttr}),
-		OS2000 = L.geoJson(os2000Data, {style: styleOS2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		OS2010 = L.geoJson(os2010Data, {style: styleOS2010,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GS2000 = L.geoJson(gs2000Data, {style: styleGS2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GS2010 = L.geoJson(gs2010Data, {style: styleGS2010,onEachFeature: onEachFeature, attribution: cmAttr}),
+		
 		OR2000 = L.geoJson(or2000Data, {style: styleOR2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		OR2010 = L.geoJson(or2010Data, {style: styleOR2010,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GR2000 = L.geoJson(gr2000Data, {style: styleGR2000,onEachFeature: onEachFeature, attribution: cmAttr}),
-		GR2010 = L.geoJson(gr2010Data, {style: styleGR2010,onEachFeature: onEachFeature, attribution: cmAttr}),
+		OR2010 = L.geoJson(or2010Data, {style: styleOR2010,onEachFeature: onEachFeature, attribution: cmAttr});
 		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
 		
 		var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
@@ -130,18 +111,6 @@
 								'#ddd';
 		}
 		
-		function getColorOC(d) {
-			return d > 20000	? 	'#800026' :
-			       d > 15000	? 	'#BD0026' :
-			       d > 10000	? 	'#E31A1C' :
-			       d > 5000		? 	'#FC4E2A' :
-			       d > 2500		? 	'#FD8D3C' :
-			       d > 1000		? 	'#FEB24C' :
-			       d > 500		? 	'#FED976' :
-			       d > 1		? 	'#FFEDA0' :
-									'#CCCCCC';
-		}
-		
 		function getColorOR(d) {
 			return d > 2000	?	'#800026' :
 			       d > 1500	?	'#BD0026' :
@@ -153,116 +122,8 @@
 			       d > 1	?	'#FFEDA0' :
 								'#CCCCCC';
 		}
-
-		function getColorOS(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
-		}
-
-		function getColorGC(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
-		}
-		
-		function getColorGS(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
-		}
-		
-		function getColorGR(d) {
-			return d > 2000	?	'#800026' :
-			       d > 1500	?	'#BD0026' :
-			       d > 1000	?	'#E31A1C' :
-			       d > 500	?	'#FC4E2A' :
-			       d > 250	?	'#FD8D3C' :
-			       d > 100	?	'#FEB24C' :
-			       d > 50	?	'#FED976' :
-			       d > 1	?	'#FFEDA0' :
-								'#CCCCCC';
-		}
-		function styleOC2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
 		
 		function styleOR2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-		
-		function styleOS2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-
-		function styleGC2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-		
-		function styleGS2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-
-		
-		function styleGR2000(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-
-		function styleOC2010(feature) {
 			return {
 				weight: 1,
 				opacity: 1,
@@ -281,46 +142,6 @@
 				fillColor: getColorAll(feature.properties.Value)
 			};
 		}
-		
-		function styleOS2010(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-		
-		function styleGC2010(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-		
-		function styleGS2010(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}
-		
-		function styleGR2010(feature) {
-			return {
-				weight: 1,
-				opacity: 1,
-				color: 'white',
-				fillOpacity: 0.7,
-				fillColor: getColorAll(feature.properties.Value)
-			};
-		}		
 		
 		function stylePipelines(feature) {
 			return {
@@ -355,18 +176,8 @@
 		}
 
 		function resetHighlight(e) {
-			OC2000.resetStyle(e.target);
 			OR2000.resetStyle(e.target);
-			OS2000.resetStyle(e.target);
-			GC2000.resetStyle(e.target);
-			GS2000.resetStyle(e.target);
-			GR2000.resetStyle(e.target);
-			OC2010.resetStyle(e.target);
 			OR2010.resetStyle(e.target);
-			OS2010.resetStyle(e.target);
-			GC2010.resetStyle(e.target);
-			GR2010.resetStyle(e.target);
-			GS2010.resetStyle(e.target);
 			info.update();
 		}
 
@@ -383,7 +194,7 @@
 				[84, 180],
 				[-60, -180]
 			]),
-			layers: [minimal, OC2010]
+			layers: [minimal, OR2010]
 		});
 
 		var baseLayers = {
@@ -393,18 +204,8 @@
 		};
 		
 		var dataLayers = {
-			"Petroleum Consumption (2000)":OC2000,
-			"Petroleum Consumption (2010)":OC2010,
-			"Gas Consumption (2000)":GC2000,
-			"Gas Consumption (2010)":GC2010,
-			"Total Oil Production (2000)":OS2000,
-			"Total Oil Production (2010)":OS2010,
-			"Total Gas Production (2000)":GS2000,
-			"Total Gas Production (2010)":GS2010,
 			"Crude Oil Reserves (2000)":OR2000,
 			"Crude Oil Reserves (2010)":OR2010,
-			"Gas Reserves (2000)":GR2000,
-			"Gas Reserves (2010)":GR2010
 		};
 
 		//If vector overlays such as roads, rivers, pipelines, etc are needed, add them here (AND add the layer group using using control.layers).
