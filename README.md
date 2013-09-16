@@ -1,4 +1,4 @@
-energy
+Energy Data Prototype
 ======
 # Summary
 This project is a prototype to demonstrate mapping capabilities using data from the [U.S. Energy Information Administration](http://www.eia.gov/). Initially, it uses a subset of [oil and gas data](http://www.eia.gov/cfapps/ipdbproject/IEDIndex3.cfm) but may expand as necessary. The purpose of this product is to easily visualize energy data in order to assist in knowledge sharing with and between U.S. State Department Foreign Service Officers specializing in energy issues.
