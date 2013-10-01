@@ -58,6 +58,7 @@
 	<script type="text/javascript" src="data/Global_Energy_Data_110m_GC2010.js"></script>
 	<script type="text/javascript" src="data/Global_Energy_Data_110m_GS2010.js"></script>
 	<script type="text/javascript" src="data/Global_Energy_Data_110m_GR2010.js"></script>
+	<script type="text/javascript" src="data/Global_Energy_Data_110m_SG2012.js"></script>
 	<script type="text/javascript" src="data/oil_pipelines.js"></script>
 	<script type="text/javascript">
 
@@ -96,7 +97,7 @@
 			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
 			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 		
-	    var OC2000, OS2000, OR2000, GC2000, GS2000, GR2000, OC2010, OS2010, OR2010, GC2010, GS2010, GR2010;
+	    var OC2000, OS2000, OR2000, GC2000, GS2000, GR2000, OC2010, OS2010, OR2010, GC2010, GS2010, GR2010, SG2012;
 		
 		OC2000 = L.geoJson(oc2000Data, {style: styleOC2000,onEachFeature: onEachFeature, attribution: cmAttr}),
 		OC2010 = L.geoJson(oc2010Data, {style: styleOC2010,onEachFeature: onEachFeature, attribution: cmAttr}),
@@ -110,6 +111,7 @@
 		OR2010 = L.geoJson(or2010Data, {style: styleOR2010,onEachFeature: onEachFeature, attribution: cmAttr}),
 		GR2000 = L.geoJson(gr2000Data, {style: styleGR2000,onEachFeature: onEachFeature, attribution: cmAttr}),
 		GR2010 = L.geoJson(gr2010Data, {style: styleGR2010,onEachFeature: onEachFeature, attribution: cmAttr}),
+		SG2012 = L.geoJson(sg2012Data, {style: stylesg2012,onEachFeature: onEachFeature, attribution: cmAttr}),
 		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
 		
 		var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
@@ -201,6 +203,19 @@
 			       d > 1	?	'#FFEDA0' :
 								'#CCCCCC';
 		}
+		
+		function getColorSG(d) {
+			return d > 799	?	'#800026' :
+			       d > 599	?	'#BD0026' :
+			       d > 199	?	'#E31A1C' :
+			       d > 74	?	'#FC4E2A' :
+			       d > 49	?	'#FD8D3C' :
+			       d > 24	?	'#FEB24C' :
+			       d > 14	?	'#FED976' :
+			       d > 1	?	'#FFEDA0' :
+								'#CCCCCC';
+		}
+		
 		function styleOC2000(feature) {
 			return {
 				weight: 1,
@@ -322,6 +337,16 @@
 			};
 		}		
 		
+		function styleSG2012(feature) {
+			return {
+				weight: 1,
+				opacity: 1,
+				color: 'white',
+				fillOpacity: 0.7,
+				fillColor: getColorAll(feature.properties.Value)
+			};
+		}		
+		
 		function stylePipelines(feature) {
 			return {
 				weight: 1.25,
@@ -367,6 +392,7 @@
 			GC2010.resetStyle(e.target);
 			GR2010.resetStyle(e.target);
 			GS2010.resetStyle(e.target);
+			SG2012.resetStyle(e.target);
 			info.update();
 		}
 
@@ -404,7 +430,8 @@
 			"Crude Oil Reserves (2000)":OR2000,
 			"Crude Oil Reserves (2010)":OR2010,
 			"Gas Reserves (2000)":GR2000,
-			"Gas Reserves (2010)":GR2010
+			"Gas Reserves (2010)":GR2010,
+			"Shale Gas TRR (2012)":SG2012
 		};
 
 		//If vector overlays such as roads, rivers, pipelines, etc are needed, add them here (AND add the layer group using using control.layers).
