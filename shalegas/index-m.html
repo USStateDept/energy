@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Energy Data - Shale Gas TRR</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/Leaflet-0.6.1/dist/leaflet.css" />
+	<link rel="stylesheet" href="../css/energy.css" />
+	<link rel="shortcut icon" href="../../img/eDip_logo.png" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		html, body, #map {
+			height: 100%;
+		}
+		.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+
+		.legend {
+			text-align: left;
+			line-height: 18px;
+			color: #555;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+	</style>
+	<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-42977639-1', 'edip-maps.net');
+			ga('send', 'pageview');
+		</script>
+	</head>
+<body>
+	<div id="map"></div>
+	<script src="../../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
+	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
+	<script type="text/javascript" src="../data/Global_Energy_Data_110m_SG2012.js"></script>
+	<script type="text/javascript" src="../data/oil_pipelines.js"></script>
+	<script type="text/javascript">
+
+		/*
+		This app demonstrates what we can do using Leaflet, choropleth mapping, feature mouseovers, and overlays. One key feature is the use of layer grouping with base maps, data layers, and overlays. Leaflet 0.6.1 source only allows for base maps (controlled with a radio button) and overlays (controlled with checkboxes). I added in another category to leaflet.js, "Data Layers", to control the choropleths. My thinking was that only one choropleth should be shown at a time, and that a user should be able to superimpose small vectors layers such as pipelines or facilities.
+		
+		The zoom level is limited to a regional scale so that the very generalized country polygons still hold up visually.
+		
+		The underlying data was originally a single shapefile with a field for each variable. In order not to bog down the app's speed and performance, each attribute needed to be parsed to an individual GeoJson. These GeoJsons have additional fields to describe the type of data ("Oil Reserves"), Year, and Unit of Measure. These additional fields, along with Country Name, are used to populate the info window on a rollover.
+		
+		This example does not use USG recognized boundaries or country names.
+		*/
+		
+		/* 
+		REFERENCES:
+		http://leafletjs.com/examples/choropleth.html
+		http://leafletjs.com/examples/layers-control.html
+		*/
+		
+		/*
+		Improvements Needed
+		1) Use USG recognized boundaries
+			To do this, we need to create the appropriately generalized and attributed shapefile.
+		2) Improve JavaScript styles to reduce code size.
+		3) Move data from GeoJsons into PostGIS
+		4) After a rollover or switching Data Layers, new layers are loaded on top of Overlays.
+		5) Have key update to reflect different data types/scales.
+			In this app, oil supplies on occupy the 3 lowest classes.
+		6) Have attribution update for whichever layer is currently displayed.
+		7) Add Labels overlay.
+		8) Legend labels: First class should be "No data".
+		*/
+		
+		var
+			cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>',
+			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
+			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+		
+	    var SG2012;
+				
+		SG2012 = L.geoJson(sg2012Data, {style: styleSG2012,onEachFeature: onEachFeature, attribution: cmAttr});
+		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
+		
+		var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
+		    midnight  = L.tileLayer(cmUrl, {styleId: 999, attribution: cmAttr}),
+			//tonerlabels = new L.StamenTileLayer("toner-labels", {opacity: 0.5, attribution: cmAttr}),
+			watercolor = new L.StamenTileLayer("watercolor", {attribution: cmAttr});
+		
+		// get color depending on OC11 value
+		function getColorAll(d) {
+			return d > 799	?	'#800026' :
+			       d > 599	?	'#BD0026' :
+			       d > 199	?	'#E31A1C' :
+			       d > 74	?	'#FC4E2A' :
+			       d > 49	?	'#FD8D3C' :
+			       d > 24	?	'#FEB24C' :
+			       d > 14	?	'#FED976' :
+			       d > 1	?	'#FFEDA0' :
+								'#CCCCCC';
+		}
+		
+		function getColorSG(d) {
+			return d > 799	?	'#800026' :
+			       d > 599	?	'#BD0026' :
+			       d > 199	?	'#E31A1C' :
+			       d > 74	?	'#FC4E2A' :
+			       d > 49	?	'#FD8D3C' :
+			       d > 24	?	'#FEB24C' :
+			       d > 14	?	'#FED976' :
+			       d > 1	?	'#FFEDA0' :
+								'#CCCCCC';
+		}
+		
+		function styleSG2012(feature) {
+			return {
+				weight: 1,
+				opacity: 1,
+				color: 'white',
+				fillOpacity: 0.7,
+				fillColor: getColorAll(feature.properties.Value)
+			};
+		}
+		
+		function stylePipelines(feature) {
+			return {
+				weight: 1.25,
+				opacity: .5,
+				color: 'black',
+			};
+		}
+		
+		function onEachFeature(feature, layer) {
+			layer.on({
+				mouseover: highlightFeature,
+				mouseout: resetHighlight,
+				click: zoomToFeature
+			});
+		}
+		
+		function highlightFeature(e) {
+			var layer = e.target;
+
+			layer.setStyle({
+				weight: 1.5,
+				color: '#666',
+				fillOpacity: 0.7
+			});
+
+			if (!L.Browser.ie && !L.Browser.opera) {
+				layer.bringToFront();
+			}
+
+			info.update(layer.feature.properties);
+		}
+
+		function resetHighlight(e) {
+			SG2012.resetStyle(e.target);
+			info.update();
+		}
+
+		function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+		}
+
+		var map = L.map('map', {
+			center: [15, 10],
+			zoom: 1,
+			minZoom: 1,
+			maxZoom: 4,
+			maxBounds: ([
+				[84, 180],
+				[-60, -180]
+			]),
+			layers: [minimal, SG2012]
+		});
+
+		var baseLayers = {
+			"Minimal": minimal,
+			"Midnight": midnight,
+			"Watercolor":watercolor
+		};
+		
+		var dataLayers = {
+			"Shale Gas TRR (2012)":SG2012,
+		};
+
+		//If vector overlays such as roads, rivers, pipelines, etc are needed, add them here (AND add the layer group using using control.layers).
+		var overlays = {
+			"Oil & Gas Pipelines":pipelines
+			//"Labels":tonerlabels
+		};
+		
+		L.control.layers(baseLayers, dataLayers, overlays).addTo(map);
+		
+		// control that shows country info on hover
+		var info = L.control();
+
+		info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info');
+			this.update();
+			return this._div;
+		};
+
+		/*info.update = function (props) {
+			this._div.innerHTML = (props ?
+				'<b>' + props.name + '</b><br />' + '<h4>' + props.Type + ' (' + props.Year + ')</h4>' + props.Value + ' ' + props.Unit
+				: 'Hover over a country');
+		};
+
+		info.addTo(map);
+		*/
+		var legend = L.control({position: 'bottomleft'});
+
+		legend.onAdd = function (map) {
+			var div = L.DomUtil.create('div', 'info legend'),
+				grades = ['No data', 1, 15, 25, 50, 75, 200, 600, 800],
+				labels = [],
+				from, to;
+		
+			for (var i = 0; i < grades.length; i++) {
+				from = grades[i];
+				to = grades[i + 1];
+
+				labels.push(
+					'<i style="background:' + getColorAll(from + 1) + '"></i> ' +
+					from + (to ? ' to ' + to : '+'));
+			}
+
+			div.innerHTML = labels.join('<br>');
+			return div;
+		};
+
+		legend.addTo(map);
+		
+		var popup = L.popup();
+
+		function onMapClick(e) {
+			popup
+				SG2012.bindPopup("<b>Theme: </b>" + props)
+				.openOn(map);
+		}
+
+		function onEachFeature(feature, layer) {
+			var popupContent = "<h3>" + feature.properties.name + "</h3><br /><h4>" + feature.properties.Type + " (" + feature.properties.Year + ")<br />" + feature.properties.Value + " " + feature.properties.Unit + "</h4>";
+
+			if (feature.properties && feature.properties.popupContent) {
+				popupContent += feature.properties.popupContent;
+			}
+
+			layer.bindPopup(popupContent);
+		}
+		
+		map.on('click', onMapClick);
+
+
+	</script>
+</body>
+</html>
