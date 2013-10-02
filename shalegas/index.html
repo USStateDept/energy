@@ -95,8 +95,7 @@
 			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 		
 	    var SG2012;
-		
-		
+				
 		SG2012 = L.geoJson(sg2012Data, {style: styleSG2012,onEachFeature: onEachFeature, attribution: cmAttr});
 		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
 		
@@ -104,7 +103,6 @@
 		    midnight  = L.tileLayer(cmUrl, {styleId: 999, attribution: cmAttr}),
 			//tonerlabels = new L.StamenTileLayer("toner-labels", {opacity: 0.5, attribution: cmAttr}),
 			watercolor = new L.StamenTileLayer("watercolor", {attribution: cmAttr});
-
 		
 		// get color depending on OC11 value
 		function getColorAll(d) {
