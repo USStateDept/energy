@@ -54,7 +54,7 @@
 	</head>
 <body>
 	<div id="map"></div>
-	<script src="../../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
+	<script src="../../lib/Leaflet-0.6.1/dist/leaflet-src.js"></script>
 	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
 	<script type="text/javascript" src="../data/Global_Energy_Data_110m_SG2012.js"></script>
 	<script type="text/javascript" src="../data/oil_pipelines.js"></script>
@@ -209,8 +209,8 @@
 			//"Labels":tonerlabels
 		};
 		
-		L.control.layers(baseLayers, dataLayers, overlays).addTo(map);
-		
+		var menu = L.control.layers(baseLayers, dataLayers, overlays).addTo(map);
+		/*
 		// control that shows country info on hover
 		var info = L.control();
 
@@ -220,7 +220,7 @@
 			return this._div;
 		};
 
-		/*info.update = function (props) {
+		info.update = function (props) {
 			this._div.innerHTML = (props ?
 				'<b>' + props.name + '</b><br />' + '<h4>' + props.Type + ' (' + props.Year + ')</h4>' + props.Value + ' ' + props.Unit
 				: 'Hover over a country');
@@ -253,14 +253,8 @@
 		
 		var popup = L.popup();
 
-		function onMapClick(e) {
-			popup
-				SG2012.bindPopup("<b>Theme: </b>" + props)
-				.openOn(map);
-		}
-
 		function onEachFeature(feature, layer) {
-			var popupContent = "<h3>" + feature.properties.name + "</h3><br /><h4>" + feature.properties.Type + " (" + feature.properties.Year + ")<br />" + feature.properties.Value + " " + feature.properties.Unit + "</h4>";
+			var popupContent = "<h2>" + feature.properties.name + "</h2><br /><h3>" + feature.properties.Type + " (" + feature.properties.Year + ")<br />" + feature.properties.Value + " " + feature.properties.Unit + "</h3>";
 
 			if (feature.properties && feature.properties.popupContent) {
 				popupContent += feature.properties.popupContent;
@@ -269,7 +263,13 @@
 			layer.bindPopup(popupContent);
 		}
 		
-		map.on('click', onMapClick);
+		function closeMenu(e) {
+			popup
+				SG2012.bindPopup("<b>Theme: </b>" + props)
+				.openOn(map);
+		}
+		
+		//menu.on('mouseout', menuClose);
 
 
 	</script>
