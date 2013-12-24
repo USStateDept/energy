@@ -6,7 +6,7 @@ This project is a prototype to demonstrate mapping capabilities using data from 
 # Tech Details
 * [Leaflet](http://www.leafletjs.com/) is used to make the map interface;
 * All the data is static: downloaded as XLS files, manipulated in MS Excel, joined to country polygons in [QGIS](http://www.qgis.org/), saved as [GeoJson](http://geojson.org/) files, and brought in as individual variables;
-* The webpage itself is all the javascript we put here on [this git](https://github.com/brodydittemore-edip/energy).
+* The webpage itself is all the javascript we put here on [this git](https://github.com/USStateDept/energy).
 
 # Possible Expansion
 * Include additional energy data, such as shale gas, solar and wind;
