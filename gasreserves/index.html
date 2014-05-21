@@ -54,7 +54,6 @@
 <body>
 	<div id="map"></div>
 	<script src="../../lib/Leaflet-0.6.1/dist/leaflet.js"></script>
-	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.2"></script>
 	<script type="text/javascript" src="../data/Global_Energy_Data_110m_GR2000.js"></script>
 	<script type="text/javascript" src="../data/Global_Energy_Data_110m_GR2010.js"></script>
 	<script type="text/javascript" src="../data/oil_pipelines.js"></script>
@@ -90,23 +89,13 @@
 		8) Legend labels: First class should be "No data".
 		*/
 		
-		var
-			cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>',
-			//cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>, <a href="http://www.openstreetmap.org/" title="&copy; OpenStreetMap contributors">OpenStreetMap</a>, <a href="http://www.cloudmade.com/" title="&copy; 2011 CloudMade">CloudMade</a>, <a href="http://www.stamen.com/" title="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.">Stamen Design</a>',
-			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+		var cmAttr = 'Data: <a href="http://www.eia.gov/countries/data.cfm" title="U.S. Energy Information Administration">EIA</a>';
 		
 	    var GR2000, GR2010;
-		
 		
 		GR2000 = L.geoJson(gr2000Data, {style: styleGR2000,onEachFeature: onEachFeature, attribution: cmAttr}),
 		GR2010 = L.geoJson(gr2010Data, {style: styleGR2010,onEachFeature: onEachFeature, attribution: cmAttr});
 		pipelines = L.geoJson(pipelinesData, {style: stylePipelines, attribution: cmAttr});
-		
-		var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
-		    midnight  = L.tileLayer(cmUrl, {styleId: 999, attribution: cmAttr}),
-			//tonerlabels = new L.StamenTileLayer("toner-labels", {opacity: 0.5, attribution: cmAttr}),
-			watercolor = new L.StamenTileLayer("watercolor", {attribution: cmAttr});
-
 		
 		// get color depending on OC11 value
 		function getColorAll(d) {
@@ -204,14 +193,14 @@
 				[84, 180],
 				[-60, -180]
 			]),
-			layers: [minimal, GR2010]
+			layers: [GR2010]
 		});
 
-		var baseLayers = {
-			"Minimal": minimal,
-			"Midnight": midnight,
-			"Watercolor":watercolor
-		};
+		L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: cmAttr,
+			id: 'examples.map-20v6611k'
+		}).addTo(map);
 		
 		var dataLayers = {
 			"Gas Reserves (2000)":GR2000,
@@ -224,7 +213,7 @@
 			//"Labels":tonerlabels
 		};
 		
-		L.control.layers(baseLayers, dataLayers, overlays).addTo(map);
+		L.control.layers(dataLayers, overlays).addTo(map);
 		
 		// control that shows country info on hover
 		var info = L.control();
